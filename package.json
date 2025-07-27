@@ -6,21 +6,36 @@
   "author": "SparkToSource",
   "description": "Browser extension that blocks all redirects and popups to other sites",
   "scripts": {
-    "dev": "vite build --watch",
-    "build": "tsc && vite build"
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack --watch --config webpack.dev.js",
+    "lint": "eslint 'src/**/*.{js,ts}'"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/SparkToSource/RedirectShield"
   },
   "license": "ISC",
   "dependencies": {
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.27.7",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-typescript": "^7.27.1",
     "@types/webextension-polyfill": "^0.12.3",
-    "typescript": "~5.8.3",
-    "vite": "^7.0.4",
-    "vite-plugin-static-copy": "^3.1.1"
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
+    "@typescript-eslint/parser": "^8.35.0",
+    "babel-loader": "^10.0.0",
+    "copy-webpack-plugin": "^13.0.0",
+    "css-loader": "^7.1.2",
+    "cssnano": "^7.0.7",
+    "eslint": "^9.29.0",
+    "fork-ts-checker-webpack-plugin": "^9.1.0",
+    "html-webpack-plugin": "^5.6.3",
+    "mini-css-extract-plugin": "^2.9.2",
+    "postcss-loader": "^8.1.1",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
   }
 }

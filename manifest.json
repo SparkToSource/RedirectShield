@@ -7,14 +7,18 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.bundle.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.bundle.js"],
+      "run_at": "document_start"
+    }
+  ],
   "permissions": [
     "storage",
     "tabs",
     "declarativeNetRequest"
-  ],
-  "host_permissions": [
-    "<all_urls>"
   ]
 }
