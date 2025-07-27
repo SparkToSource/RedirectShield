@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Redirect Shield",
+  "version": "1.0",
+  "description": "Blocks all unwanted redirects and popups.",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}

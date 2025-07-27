@@ -1,0 +1,26 @@
+{
+  "name": "redirect-shield",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "author": "SparkToSource",
+  "description": "Browser extension that blocks all redirects and popups to other sites",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "tsc && vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "ISC",
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0"
+  },
+  "devDependencies": {
+    "@types/webextension-polyfill": "^0.12.3",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4",
+    "vite-plugin-static-copy": "^3.1.1"
+  }
+}
