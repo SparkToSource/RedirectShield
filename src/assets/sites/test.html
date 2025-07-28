@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta http-equiv="refresh" content="5; url=https://www.duckduckgo.com"> -->
+  <title>Redirect Shield - Test Site</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: 20px;
+    }
+  </style>
+  <script>
+    function injectMetaRefresh() {
+      const metaRefresh = document.createElement("meta");
+      metaRefresh.httpEquiv = "refresh";
+      metaRefresh.content = "1; url=https://www.duckduckgo.com";
+      document.head.append(metaRefresh);
+    }
+
+    function windowOpen() {
+      window.open("https://www.duckduckgo.com", "_blank");
+    }
+
+    function setLocationHref() {
+      location.href = "https://www.duckduckgo.com";
+    }
+  </script>
+</head>
+
+<body>
+  <p>Warning: there is a meta refresh redirect already existing in the document head.</p>
+  <a href="https://www.duckduckgo.com">Anchor tag with href to DuckDuckGo.</a>
+  <form action="https://www.duckduckgo.com"><button type=submit">Submit form to DuckDuckGo.</button></form>
+  <button onclick="injectMetaRefresh()">Inject Meta Refresh to DuckDuckGo.</button>
+  <button onclick="windowOpen()">Window open (_blank) to DuckDuckGo.</button>
+  <button onclick="setLocationHref()">Set location href to DuckDuckGo.</button>
+</body>
+
+</html>

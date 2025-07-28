@@ -8,11 +8,42 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+class InjectCompiledCodePlugin {
+  constructor(options) {
+    this.entry = options.entry;
+    this.targetAsset = options.targetAsset;
+    this.placeholder = options.placeholder || '/* COMPILED_CODE */';
+  }
+
+  apply(compiler) {
+    compiler.hooks.thisCompilation.tap('InjectCompiledCodePlugin', (compilation) => {
+      compilation.hooks.processAssets.tapPromise(
+        {
+          name: 'InjectCompiledCodePlugin',
+          stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
+        },
+        async () => {
+          const entryAsset = compilation.getAsset(this.entry);
+          const compiledCode = entryAsset.source.source();
+
+          const targetAsset = compilation.getAsset(this.targetAsset);
+          const targetCode = targetAsset.source.source();
+
+          const replaced = targetCode.replace(this.placeholder, JSON.stringify(compiledCode));
+          compilation.updateAsset(this.targetAsset, new compiler.webpack.sources.RawSource(replaced));
+
+          compilation.deleteAsset(this.entry);
+        }
+      );
+    });
+  }
+}
+
 export default {
   entry: {
-    content: './src/content/Content.ts',
-    background: './src/background/Background.ts',
     popup: './src/popup/Popup.ts',
+    content: './src/content/Content.ts',
+    injectee: './src/content/InjectedContent.ts',
   },
   output: {
     filename: '[name].bundle.js',
@@ -46,6 +77,11 @@ export default {
     ]
   },
   plugins: [
+    new InjectCompiledCodePlugin({
+      entry: 'injectee.bundle.js',
+      targetAsset: 'content.bundle.js',
+      placeholder: '/* COMPILED_CODE */'
+    }),
     new ForkTsCheckerWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',

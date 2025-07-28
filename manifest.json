@@ -6,19 +6,21 @@
   "action": {
     "default_popup": "popup.html"
   },
-  "background": {
-    "service_worker": "background.bundle.js"
-  },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.bundle.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "injector.bundle.js"
+      ],
       "run_at": "document_start"
     }
   ],
   "permissions": [
-    "storage",
-    "tabs",
-    "declarativeNetRequest"
-  ]
+    "storage"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'unsafe-inline'; object-src 'self'"
+  }
 }
