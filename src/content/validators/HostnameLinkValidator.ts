@@ -13,7 +13,7 @@ export class HostnameLinkValidator implements LinkValidator {
     }
 
     try {
-      return new URL(link).hostname === this.currentHost;
+      return new URL(link, location.host).hostname === this.currentHost;
     } catch {
       return false;
     }

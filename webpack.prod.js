@@ -1,5 +1,5 @@
-import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { mergeWithRules } from 'webpack-merge';
 import common from './webpack.common.js';
 

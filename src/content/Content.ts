@@ -1,45 +1,33 @@
-import type { Blocker } from "./blockers/Blocker";
-import type { Notifier } from "./notifiers/Notifier";
-import type { LinkValidator } from "./validators/LinkValidator";
-import { AnchorTagBlocker } from "./blockers/AnchorTagBlocker";
-import { FormSubmitBlocker } from "./blockers/FormSubmitBlocker";
-import { MetaRefreshBlocker } from "./blockers/MetaRefreshBlocker";
-import { WindowLocationChangeBlocker } from "./blockers/WindowLocationChangeBlocker";
-import { ConsoleNotifier } from "./notifiers/ConsoleNotifier";
-import { HostnameLinkValidator } from "./validators/HostnameLinkValidator";
+import type { SettingsData } from "../repositories/SettingsRepository";
+import { BlockerFactory } from "./blockers/BlockerFactory";
+import { BadgeNotifier } from "./notifiers/BadgeNotifier";
+import { RemoverFactory } from "./removers/RemoverFactory";
+import { LinkValidatorFactory } from "./validators/LinkValidatorFactory";
 
 class Content {
-  private readonly linkValidator: LinkValidator;
-  private readonly notifier: Notifier;
-
-  constructor() {
-    this.linkValidator = new HostnameLinkValidator(window.location.hostname);
-    this.notifier = new ConsoleNotifier();
-  }
-  
   start() {
-    this.startBlocking();
-    this.startBlockingOutsideOfSandbox();
-  }
+    const settings = this.getSettings();
 
-  private startBlocking() {
-    const shields: Blocker[] = [
-      new MetaRefreshBlocker(this.linkValidator, this.notifier),
-      new FormSubmitBlocker(this.linkValidator, this.notifier),
-      new AnchorTagBlocker(this.linkValidator, this.notifier),
-      new WindowLocationChangeBlocker(this.notifier),
-    ];
+    const notifier = new BadgeNotifier();
+    const remover = new RemoverFactory().build(settings.remover);
+    const linkValidator = new LinkValidatorFactory().build(settings.linkValidatorType);
+
+    const shields = new BlockerFactory(linkValidator, notifier, remover).buildAll(settings);
 
     for (const shield of shields) {
       shield.block();
     }
   }
 
-  private startBlockingOutsideOfSandbox() {
-    const script = document.createElement("script");
-    script.textContent = `(/* COMPILED_CODE */)();`;
-    document.documentElement.append(script);
-    script.remove();
+  private getSettings(): SettingsData {
+    const currentScript = document.currentScript;
+
+    if (!currentScript || !currentScript.dataset.settings) {
+      return {} as SettingsData;
+    }
+
+    const settings = JSON.parse(currentScript.dataset.settings);
+    return settings;
   }
 }
 

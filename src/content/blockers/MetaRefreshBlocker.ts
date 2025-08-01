@@ -1,68 +1,30 @@
-import type { LinkValidator } from "../validators/LinkValidator";
 import type { Notifier } from "../notifiers/Notifier";
+import type { Remover } from "../removers/Remover";
 import type { Blocker } from "./Blocker";
 
 export class MetaRefreshBlocker implements Blocker {
-  private readonly linkValidator: LinkValidator;
   private readonly notifier: Notifier;
+  private readonly remover: Remover;
 
-  constructor(linkValidator: LinkValidator, notifier: Notifier) {
-    this.linkValidator = linkValidator;
+  constructor(notifier: Notifier, remover: Remover) {
     this.notifier = notifier;
+    this.remover = remover;
   }
 
   block() {
-    this.removeExistingMetaRefreshes();
-    this.listenAndRemoveAddedMetaRefreshes();
-  }
+    const originalCreateElement = document.createElement.bind(document);
 
-  private removeExistingMetaRefreshes() {
-    const metaRefreshers = document.querySelectorAll<HTMLMetaElement>('meta[http-equiv="refresh"]');
+    document.createElement = (tagName: keyof HTMLElementTagNameMap, options?: ElementCreationOptions) => {
+      if (tagName.toLowerCase() === 'meta') {
+        this.remover.remove();
+        this.notifier.notify("Blocked creation of meta element.");
 
-    for (const metaRefresh of metaRefreshers) {
-      this.removeInvalidMetaRefresh(metaRefresh);
-    }
-  }
-
-  private listenAndRemoveAddedMetaRefreshes() {
-    const observer = new MutationObserver((mutationsList) => {
-      const addedMetaRefreshes = mutationsList
-        .flatMap(mutation => [...mutation.addedNodes])
-        .filter(node => this.isMetaRefresh(node));
-
-      for (const metaRefresh of addedMetaRefreshes) {
-        this.removeInvalidMetaRefresh(metaRefresh);
+        const element = originalCreateElement("script");
+        element.type = "text/plain";
+        return element;
       }
-    });
 
-    observer.observe(document, {
-      childList: true,
-      subtree: true
-    });
+      return originalCreateElement(tagName, options);
+    };
   }
-
-  private removeInvalidMetaRefresh(metaRefresh: HTMLMetaElement) {
-    const content = metaRefresh.getAttribute("content") ?? "";
-    const contentParts = content.split(";");
-
-    const urlPart = contentParts.find(e => e.trim().toLowerCase().startsWith("url"));
-
-    if (urlPart) {
-      const url = urlPart.split("=")[1];
-
-      if (this.linkValidator.isLinkValid(url)) {
-        return;
-      }
-    }
-
-    metaRefresh.remove();
-    this.notifier.notify(urlPart);
-  };
-
-  private isMetaRefresh(node: Node): node is HTMLMetaElement {
-    return (
-      node instanceof HTMLMetaElement &&
-      node.getAttribute("http-equiv")?.toLowerCase() === "refresh"
-    );
-  };
 }

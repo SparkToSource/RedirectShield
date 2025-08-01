@@ -1,49 +1,19 @@
-import { fileURLToPath } from 'url';
-import path, { dirname } from 'path';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-class InjectCompiledCodePlugin {
-  constructor(options) {
-    this.entry = options.entry;
-    this.targetAsset = options.targetAsset;
-    this.placeholder = options.placeholder || '/* COMPILED_CODE */';
-  }
-
-  apply(compiler) {
-    compiler.hooks.thisCompilation.tap('InjectCompiledCodePlugin', (compilation) => {
-      compilation.hooks.processAssets.tapPromise(
-        {
-          name: 'InjectCompiledCodePlugin',
-          stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
-        },
-        async () => {
-          const entryAsset = compilation.getAsset(this.entry);
-          const compiledCode = entryAsset.source.source();
-
-          const targetAsset = compilation.getAsset(this.targetAsset);
-          const targetCode = targetAsset.source.source();
-
-          const replaced = targetCode.replace(this.placeholder, JSON.stringify(compiledCode));
-          compilation.updateAsset(this.targetAsset, new compiler.webpack.sources.RawSource(replaced));
-
-          compilation.deleteAsset(this.entry);
-        }
-      );
-    });
-  }
-}
-
 export default {
   entry: {
+    background: './src/background/Background.ts',
     popup: './src/popup/Popup.ts',
     content: './src/content/Content.ts',
-    injectee: './src/content/InjectedContent.ts',
+    injector: './src/content/Injector.ts',
   },
   output: {
     filename: '[name].bundle.js',
@@ -77,11 +47,6 @@ export default {
     ]
   },
   plugins: [
-    new InjectCompiledCodePlugin({
-      entry: 'injectee.bundle.js',
-      targetAsset: 'content.bundle.js',
-      placeholder: '/* COMPILED_CODE */'
-    }),
     new ForkTsCheckerWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',

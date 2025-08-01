@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <meta http-equiv="refresh" content="5; url=https://www.duckduckgo.com"> -->
   <title>Redirect Shield - Test Site</title>
   <style>
     body {
@@ -22,8 +21,8 @@
       document.head.append(metaRefresh);
     }
 
-    function windowOpen() {
-      window.open("https://www.duckduckgo.com", "_blank");
+    function windowOpen(target) {
+      window.open("https://www.duckduckgo.com", target);
     }
 
     function setLocationHref() {
@@ -33,12 +32,31 @@
 </head>
 
 <body>
-  <p>Warning: there is a meta refresh redirect already existing in the document head.</p>
+  <span>These should fail:</span>
   <a href="https://www.duckduckgo.com">Anchor tag with href to DuckDuckGo.</a>
-  <form action="https://www.duckduckgo.com"><button type=submit">Submit form to DuckDuckGo.</button></form>
+  <div>
+    <span>
+      <a href="https://www.duckduckgo.com">
+        Nested
+        <a href="https://www.duckduckgo.com"> anchor tag with href to DuckDuckGo.</a>
+      </a>
+    </span>
+  </div>
+  <form action="https://www.duckduckgo.com">
+    <input type="submit" value="Submit form to DuckDuckGo.">
+  </form>
   <button onclick="injectMetaRefresh()">Inject Meta Refresh to DuckDuckGo.</button>
-  <button onclick="windowOpen()">Window open (_blank) to DuckDuckGo.</button>
+  <button onclick="windowOpen('_blank')">Window open (_blank) to DuckDuckGo.</button>
+  <button onclick="windowOpen('_self')">Window open (_self) to DuckDuckGo.</button>
   <button onclick="setLocationHref()">Set location href to DuckDuckGo.</button>
+  <span style="margin-top: 50px">These should go through:</span>
+  <a href="/index.html">Anchor tag to /index.html</a>
+  <script>
+    const a = document.createElement("a");
+    a.href = `${location.origin}/index.html`;
+    a.innerText = `Injected anchor tag to ${location.origin}/index.html`;
+    document.body.append(a);
+  </script>
 </body>
 
 </html>

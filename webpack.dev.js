@@ -1,5 +1,5 @@
-import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { merge } from 'webpack-merge';
 import common from './webpack.common.js';
 
@@ -20,7 +20,7 @@ export default merge(common, {
             cacheDirectory: true,
             cacheCompression: false,
             presets: [
-              ['@babel/preset-env', { targets: "last 1 chrome version" } ],
+              ['@babel/preset-env', { targets: "last 1 chrome version" }],
               '@babel/preset-typescript',
             ],
           },
