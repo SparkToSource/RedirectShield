@@ -1,6 +1,8 @@
 import type { SettingsData } from "../repositories/SettingsRepository";
 import { BlockerFactory } from "./blockers/BlockerFactory";
 import { BadgeNotifier } from "./notifiers/BadgeNotifier";
+import { ConsoleNotifier } from "./notifiers/ConsoleNotifier";
+import { MultiNotifier } from "./notifiers/MultiNotifier";
 import { RemoverFactory } from "./removers/RemoverFactory";
 import { LinkValidatorFactory } from "./validators/LinkValidatorFactory";
 
@@ -8,11 +10,13 @@ class Content {
   start() {
     const settings = this.getSettings();
 
-    const notifier = new BadgeNotifier();
+    const notifier = new MultiNotifier([new BadgeNotifier(), new ConsoleNotifier()]);
     const remover = new RemoverFactory().build(settings.remover);
     const linkValidator = new LinkValidatorFactory().build(settings.linkValidatorType);
 
     const shields = new BlockerFactory(linkValidator, notifier, remover).buildAll(settings);
+
+    console.log(linkValidator);
 
     for (const shield of shields) {
       shield.block();

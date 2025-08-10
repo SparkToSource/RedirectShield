@@ -3,7 +3,7 @@ import browser from "webextension-polyfill";
 export interface SettingsData {
   blockMode: "all" | "blacklist" | "none";
   blackList: Record<string, boolean>;
-  linkValidatorType: "hostname" | "origin";
+  linkValidatorType: "hostname" | "origin" | "none";
   remover: "none" | "safe" | "aggressive";
   blockAnchorTags: boolean;
   blockFormSubmit: boolean;

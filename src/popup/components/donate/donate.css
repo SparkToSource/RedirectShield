@@ -1,0 +1,8 @@
+.donate-link {
+  color: #63ADE5;
+  text-decoration: none;
+}
+
+.donate-link:hover {
+  text-decoration: underline;
+}

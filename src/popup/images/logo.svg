@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+
+<defs>
+  <path id="arrowhead" d="M0.535 0.573C0.541 0.568 0.667 0.464 0.667 0.455C0.667 0.447 0.542 0.349 0.536 0.343C0.529 0.337 0.529 0.579 0.535 0.573Z"/>
+  <path id="arrow" d="M0.394 0.624C0.394 0.577 0.397 0.488 0.403 0.471C0.409 0.452 0.607 0.452 0.636 0.452"/>
+  <path id="stripe" d="M0.31 0.31L0.69 0.69"/>
+  <circle id="circle" r="0.27" cx="0.5" cy="0.5"/>
+  <path id="shield" d="M0.123 0.183C0.241 0.183 0.503 0.06 0.5 0.06C0.496 0.06 0.761 0.182 0.874 0.181C0.874 0.243 0.881 0.501 0.875 0.535C0.824 0.815 0.534 0.956 0.5 0.958C0.458 0.96 0.179 0.815 0.127 0.534C0.121 0.502 0.122 0.241 0.123 0.183Z"/>
+</defs>
+
+<use href="#shield" stroke="#0a3a4c" stroke-width="0.03" fill="#e05140"/>
+<use href="#arrowhead" fill="#0a3a4c"/>
+<use href="#arrow" stroke="#0a3a4c" stroke-width="0.03" fill="none"/>
+<use href="#stripe" stroke="#0a3a4c" stroke-width="0.03" fill="none"/>
+<use href="#circle" stroke="#0a3a4c" stroke-width="0.03" fill="none"/>
+</svg>

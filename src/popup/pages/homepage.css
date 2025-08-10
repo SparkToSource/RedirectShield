@@ -1,0 +1,13 @@
+#homepage {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#homepage>:first-child {
+  align-self: center;
+}
+
+#homepage>:last-child {
+  align-self: end;
+}

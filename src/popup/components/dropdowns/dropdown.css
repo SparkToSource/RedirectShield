@@ -1,0 +1,39 @@
+.dropdown {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dropdown select {
+  appearance: none;
+  padding: 4px 15px 4px 10px;
+  color: var(--text-color);
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 150ms ease;
+  width: 120px;
+}
+
+.dropdown::after {
+  content: "⏷";
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: #ddd;
+  pointer-events: none;
+}
+
+.dropdown select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(from var(--primary-color) r g b / .2);
+}
+
+.dropdown:has(select:focus)::after {
+  color: var(--primary-color);
+}

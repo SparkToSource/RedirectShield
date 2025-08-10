@@ -4,7 +4,7 @@ export class HostnameLinkValidator implements LinkValidator {
   private readonly currentHost: string;
 
   constructor(currentHostName: string) {
-    this.currentHost = currentHostName;
+    this.currentHost = this.normalizeHostname(currentHostName);
   }
 
   isLinkValid(link?: string | URL) {
@@ -13,9 +13,15 @@ export class HostnameLinkValidator implements LinkValidator {
     }
 
     try {
-      return new URL(link, location.host).hostname === this.currentHost;
+      const url = new URL(link, location.href);
+      const hostname = this.normalizeHostname(url.hostname);
+      return hostname === this.currentHost;
     } catch {
       return false;
     }
+  }
+
+  private normalizeHostname(hostname: string) {
+    return hostname.replace(/^www\./, '').toLowerCase();
   }
 }
