@@ -1,5 +1,5 @@
-import type { SettingsRepository } from "../../../repositories/SettingsRepository";
-import { Switch } from "../../components/switches/Switch";
+import type { SettingsRepository } from "../../../../repositories/SettingsRepository";
+import { Switch } from "../../../components/switches/Switch";
 
 export class FailSafeSwitch {
   private readonly failSafeSwitch: Switch;

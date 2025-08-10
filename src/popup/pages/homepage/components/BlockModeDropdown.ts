@@ -1,5 +1,5 @@
-import type { SettingsData, SettingsRepository } from "../../../repositories/SettingsRepository";
-import { Dropdown } from "../../components/dropdowns/Dropdown";
+import type { SettingsData, SettingsRepository } from "../../../../repositories/SettingsRepository";
+import { Dropdown } from "../../../components/dropdowns/Dropdown";
 
 type BlockModeDropdownData = "All" | "List" | "None";
 
@@ -17,9 +17,9 @@ export class BlockModeDropdown {
   }
 
   private build() {
-    const removerDropdown = new Dropdown<BlockModeDropdownData>("remover", "Remove:", ["All", "List", "None"]);
+    const blockModeDropdown = new Dropdown<BlockModeDropdownData>("blockmode", "Block mode:", ["All", "List", "None"]);
 
-    removerDropdown.changeEvent.addListener((option) => {
+    blockModeDropdown.changeEvent.addListener((option) => {
       const blockMode = this.transformDropdownOptionToStorageFormat(option);
       this.settingsRepository.set({ blockMode });
     });
@@ -29,7 +29,7 @@ export class BlockModeDropdown {
       this.dropdown.value = option;
     });
 
-    return removerDropdown;
+    return blockModeDropdown;
   }
 
   private transformDropdownOptionToStorageFormat(option: BlockModeDropdownData): SettingsData["blockMode"] {

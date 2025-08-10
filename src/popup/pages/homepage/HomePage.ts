@@ -1,6 +1,6 @@
-import { SettingsRepository } from "../../repositories/SettingsRepository";
-import { Donate } from "../components/donate/Donate";
-import { Logo } from "../components/logo/Logo";
+import { SettingsRepository } from "../../../repositories/SettingsRepository";
+import { Donate } from "../../components/donate/Donate";
+import { Logo } from "../../components/logo/Logo";
 import { BlockedSitesTextbox } from "./components/BlockedSitesTextbox";
 import { BlockModeDropdown } from "./components/BlockModeDropdown";
 import { FailSafeSwitch } from "./components/FailSafeSwitch";

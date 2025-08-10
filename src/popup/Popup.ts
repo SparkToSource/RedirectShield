@@ -1,4 +1,4 @@
-import { HomePage } from "./pages/HomePage";
+import { HomePage } from "./pages/homepage/HomePage";
 import "./popup.css";
 
 class Popup {

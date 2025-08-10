@@ -1,5 +1,5 @@
-import type { SettingsRepository } from "../../../repositories/SettingsRepository";
-import { Textbox } from "../../components/textbox/Textbox";
+import type { SettingsRepository } from "../../../../repositories/SettingsRepository";
+import { Textbox } from "../../../components/textbox/Textbox";
 
 export class BlockedSitesTextbox {
   private readonly textbox: Textbox;

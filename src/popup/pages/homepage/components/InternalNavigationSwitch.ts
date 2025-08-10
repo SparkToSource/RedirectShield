@@ -1,5 +1,5 @@
-import { SettingsRepository } from "../../../repositories/SettingsRepository";
-import { Switch } from "../../components/switches/Switch";
+import { SettingsRepository } from "../../../../repositories/SettingsRepository";
+import { Switch } from "../../../components/switches/Switch";
 
 export class InternalNavigationSwitch {
   private readonly internalNavigationSwitch: Switch;

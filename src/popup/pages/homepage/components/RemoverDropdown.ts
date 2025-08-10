@@ -1,5 +1,5 @@
-import type { SettingsData, SettingsRepository } from "../../../repositories/SettingsRepository";
-import { Dropdown } from "../../components/dropdowns/Dropdown";
+import type { SettingsData, SettingsRepository } from "../../../../repositories/SettingsRepository";
+import { Dropdown } from "../../../components/dropdowns/Dropdown";
 
 type RemoverDropdownData = "None" | "Safe" | "Aggressive";
 
