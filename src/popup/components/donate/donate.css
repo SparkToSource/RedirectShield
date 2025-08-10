@@ -1,5 +1,5 @@
 .donate-link {
-  color: #63ADE5;
+  color: var(--primary-color);
   text-decoration: none;
 }
 

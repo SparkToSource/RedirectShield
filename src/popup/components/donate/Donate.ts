@@ -1,3 +1,5 @@
+import "./donate.css";
+
 export class Donate {
   private readonly link: HTMLAnchorElement;
 
