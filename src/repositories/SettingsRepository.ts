@@ -30,7 +30,7 @@ export class SettingsRepository {
   private getDefaults(): SettingsData {
     return {
       blockMode: "blacklist",
-      blackList: { "localhost": true },
+      blackList: {},
       linkValidatorType: "hostname",
       remover: "aggressive",
       blockAnchorTags: true,
