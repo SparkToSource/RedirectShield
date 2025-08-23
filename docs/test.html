@@ -85,18 +85,17 @@
         const doc = iframe.contentDocument || iframe.contentWindow?.document;
         if (doc) {
           doc.open();
-          doc.write(
-            `<html>
-              <body>
-                <script>
-                  const a = document.createElement('a');
-                  a.target = '_blank';
-                  a.href = 'https://www.duckduckgo.com';
-                  a.click();
-                </script>
-              </body>
-            </html>`);
-        doc.close();
+          doc.write(`<html><body></body></html>`);
+          doc.close();
+
+          const script = doc.createElement('script');
+          script.textContent = `
+            const a = document.createElement('a');
+            a.target = '_blank';
+            a.href = 'https://www.duckduckgo.com';
+            a.click();
+          `;
+          doc.body.appendChild(script);
       }
     };
   }
