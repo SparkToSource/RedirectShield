@@ -1,3 +1,4 @@
+import cssnanoPlugin from 'cssnano';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { mergeWithRules } from 'webpack-merge';
@@ -34,7 +35,7 @@ const prod = {
           options: {
             postcssOptions: {
               plugins: [
-                require('cssnano')({ preset: 'default', }),
+                cssnanoPlugin({ preset: 'default', }),
               ],
             },
           },
