@@ -54,3 +54,15 @@ Enter one site per line to specify which domains should have redirect blocking e
 3. Go to your browser's extension management page (e.g., `chrome://extensions` or `edge://extensions/`).
 4. Enable Developer Mode (if not enabled already).
 5. Select `Load Unpacked` and upload the `dist` folder.
+
+---
+
+## 🧪 Test Instructions
+
+1. Install the extension following the steps outlined in the **Installation** section.  
+2. Add `sparktosource.github.io` to your **Blocked Sites** list.  
+3. Visit the test page at:  
+   [`https://sparktosource.github.io/RedirectShield/test.html`](https://sparktosource.github.io/RedirectShield/test.html)
+
+> ⚠️ **Important**: Make sure `sparktosource.github.io` is added to the blocked sites list *before* navigating to the test page.  
+> If you add it afterward, you’ll need to refresh the page for the redirect blocking to take effect.
