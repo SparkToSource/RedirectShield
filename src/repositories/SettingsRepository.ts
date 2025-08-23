@@ -32,7 +32,7 @@ export class SettingsRepository {
       blockMode: "blacklist",
       blackList: {},
       linkValidatorType: "hostname",
-      remover: "aggressive",
+      remover: "none",
       blockAnchorTags: true,
       blockFormSubmit: true,
       blockMetaRefresh: true,
