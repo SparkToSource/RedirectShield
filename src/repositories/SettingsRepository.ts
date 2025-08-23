@@ -8,7 +8,9 @@ export interface SettingsData {
   blockAnchorTags: boolean;
   blockFormSubmit: boolean;
   blockMetaRefresh: boolean;
+  blockIFrames: boolean;
   blockWindowOpen: boolean;
+  blockHTMLInjection: boolean;
   useFailSafe: boolean;
 }
 
@@ -36,7 +38,9 @@ export class SettingsRepository {
       blockAnchorTags: true,
       blockFormSubmit: true,
       blockMetaRefresh: true,
+      blockIFrames: true,
       blockWindowOpen: true,
+      blockHTMLInjection: true,
       useFailSafe: false,
     }
   }

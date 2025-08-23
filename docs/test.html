@@ -69,7 +69,38 @@
 
       shadowRoot.append(a);
     }, 250);
-  </script>
+
+    function injectRedirectThroughInnerHTML() {
+      const html = `<meta http-equiv="refresh" content="1;url=https://www.duckduckgo.com">`;
+      document.head.innerHTML += html;
+      document.head.insertAdjacentHTML(html);
+    }
+
+    function injectIFrameWithRedirect() {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      iframe.onload = () => {
+        const doc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (doc) {
+          doc.open();
+          doc.write(
+            `<html>
+              <body>
+                <script>
+                  const a = document.createElement('a');
+                  a.target = '_blank';
+                  a.href = 'https://www.duckduckgo.com';
+                  a.click();
+                </script>
+              </body>
+            </html>`);
+        doc.close();
+      }
+    };
+  }
+</script>
 </head>
 
 <body>
@@ -93,6 +124,8 @@
   <button onclick="simulateAnchorTagClick()">Call anchor tag .click()</button>
   <script>injectShadowRootWithAnchorTag("open", "_blank")</script>
   <div id="anchorTagInClosedShadowRootAddedLater"><span>Updating soon...</span></div>
+  <button onclick="injectRedirectThroughInnerHTML()">Inject redirect script with innerHTML</button>
+  <button onclick="injectIFrameWithRedirect()">Inject iframe with redirect</button>
 
   <b style="margin-top: 40px">Navigation to another site that require failsafe:</b>
   <button onclick="setLocationHref()">Set location href</button>

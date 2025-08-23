@@ -3,7 +3,11 @@ export class ShadowRootFinder {
     const shadowRoots: ShadowRoot[] = [];
 
     function traverse(node: Element) {
-      if (node && node.shadowRoot) {
+      if (!node) {
+        return;
+      }
+
+      if (node.shadowRoot) {
         shadowRoots.push(node.shadowRoot);
         traverse(node.shadowRoot as unknown as Element);
       }
