@@ -4,9 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirect Shield - Test Site</title>
+  <title>Redirect Shield | Test</title>
   <style>
     body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
       display: flex;
       flex-direction: column;
       align-items: start;
@@ -14,6 +16,27 @@
     }
   </style>
   <script>
+    function callFormSubmit() {
+      const form = document.createElement("form");
+      form.action = "https://www.duckduckgo.com";
+      document.body.append(form);
+      form.submit();
+      form.remove();
+    }
+    function injectShadowRootWithAnchorTag(mode = "closed", target = "_blank") {
+      const host = document.createElement('div');
+      document.body.appendChild(host);
+
+      const shadow = host.attachShadow({ mode });
+
+      const a = document.createElement("a");
+      a.href = "https://www.duckduckgo.com";
+      a.innerText = `Anchor tag (${target}) in a ShadowRoot (${mode}) added with inline script`;
+      a.target = target;
+
+      shadow.append(a);
+    }
+
     function injectMetaRefresh() {
       const metaRefresh = document.createElement("meta");
       metaRefresh.httpEquiv = "refresh";
@@ -28,29 +51,60 @@
     function setLocationHref() {
       location.href = "https://www.duckduckgo.com";
     }
+
+    function simulateAnchorTagClick() {
+      const a = document.createElement("a");
+      a.href = "https://www.duckduckgo.com";
+      a.click();
+    }
+
+    setTimeout(() => {
+      const div = document.querySelector("#anchorTagInClosedShadowRootAddedLater");
+      div.innerHTML = "";
+      const shadowRoot = div.attachShadow({ mode: "closed" });
+
+      const a = document.createElement("a");
+      a.href = "https://www.duckduckgo.com";
+      a.innerText = "Anchor tag in a (closed) ShadowRoot added with delay";
+
+      shadowRoot.append(a);
+    }, 250);
   </script>
 </head>
 
 <body>
-  <span>These should fail:</span>
-  <a href="https://www.duckduckgo.com">Anchor tag with href to DuckDuckGo.</a>
+  <b>Navigation to another site:</b>
+  <a href="https://www.duckduckgo.com">Regular anchor tag with href</a>
   <div>
     <span>
       <a href="https://www.duckduckgo.com">
         Nested
-        <a href="https://www.duckduckgo.com"> anchor tag with href to DuckDuckGo.</a>
+        <a href="https://www.duckduckgo.com"><span>anchor tag with href</span></a>
       </a>
     </span>
   </div>
   <form action="https://www.duckduckgo.com">
-    <input type="submit" value="Submit form to DuckDuckGo.">
+    <input type="submit" value="Submit form">
   </form>
-  <button onclick="injectMetaRefresh()">Inject Meta Refresh to DuckDuckGo.</button>
-  <button onclick="windowOpen('_blank')">Window open (_blank) to DuckDuckGo.</button>
-  <button onclick="windowOpen('_self')">Window open (_self) to DuckDuckGo.</button>
-  <button onclick="setLocationHref()">Set location href to DuckDuckGo.</button>
-  <span style="margin-top: 50px">These should go through:</span>
-  <a href="/index.html">Anchor tag to /index.html</a>
+  <button onclick="callFormSubmit()">Call form.submit()</button>
+  <button onclick="injectMetaRefresh()">Inject Meta Refresh</button>
+  <button onclick="windowOpen('_blank')">Window open (_blank)</button>
+  <button onclick="windowOpen('_self')">Window open (_self)</button>
+  <button onclick="simulateAnchorTagClick()">Call anchor tag .click()</button>
+  <script>injectShadowRootWithAnchorTag("open", "_blank")</script>
+  <div id="anchorTagInClosedShadowRootAddedLater"><span>Updating soon...</span></div>
+
+  <b style="margin-top: 40px">Navigation to another site that require failsafe:</b>
+  <button onclick="setLocationHref()">Set location href</button>
+  <script>injectShadowRootWithAnchorTag("closed", "_self")</script>
+
+  <!--
+  <b style="margin-top: 40px">Unblockable navigation to another site:</b>
+  <script>injectShadowRootWithAnchorTag("closed", "_blank")</script>
+  -->
+
+  <b style="margin-top: 40px">Same site navigation:</b>
+  <a href="/index.html">Anchor tag with relative path to /index.html</a>
   <script>
     const a = document.createElement("a");
     a.href = `${location.origin}/index.html`;

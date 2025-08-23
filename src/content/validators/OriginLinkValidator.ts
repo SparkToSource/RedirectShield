@@ -7,7 +7,7 @@ export class OriginLinkValidator implements LinkValidator {
     this.currentOrigin = currentOrigin;
   }
 
-  isLinkValid(link?: string | URL): boolean {
+  isLinkValid(link?: string | URL | null): boolean {
     if (!link) {
       return false;
     }

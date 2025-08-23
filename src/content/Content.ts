@@ -16,8 +16,6 @@ class Content {
 
     const shields = new BlockerFactory(linkValidator, notifier, remover).buildAll(settings);
 
-    console.log(linkValidator);
-
     for (const shield of shields) {
       shield.block();
     }

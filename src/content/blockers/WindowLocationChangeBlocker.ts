@@ -14,9 +14,9 @@ export class WindowLocationChangeBlocker implements Blocker {
   block() {
     window.addEventListener("beforeunload", (e) => {
       e.preventDefault();
-      e.returnValue = "";
+      e.returnValue = "Redirect Shield prevented this redirect. Do you wish to allow the redirect?";
       this.remover.remove();
-      this.notifier.notify("Fail safe activated: prompted user to block page leave.");
+      this.notifier.notify("Failsafe activated: prompted user to block page leave.");
     });
   }
 }

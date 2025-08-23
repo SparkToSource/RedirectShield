@@ -7,7 +7,7 @@ export class HostnameLinkValidator implements LinkValidator {
     this.currentHost = this.normalizeHostname(currentHostName);
   }
 
-  isLinkValid(link?: string | URL) {
+  isLinkValid(link?: string | URL | null) {
     if (!link) {
       return false;
     }
