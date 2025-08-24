@@ -1,25 +1,29 @@
+import type { WindowContext } from "../context/WindowContext";
 import type { Notifier } from "../notifiers/Notifier";
 import type { Remover } from "../removers/Remover";
-import { ShadowRootFinder } from "../utils/ShadowRootFinder";
 import type { LinkValidator } from "../validators/LinkValidator";
 import type { Blocker } from "./Blocker";
 
 export class AnchorTagBlocker implements Blocker {
+  private readonly windowContext: WindowContext;
   private readonly linkValidator: LinkValidator;
   private readonly notifier: Notifier;
   private readonly remover: Remover;
 
-  constructor(linkValidator: LinkValidator, notifier: Notifier, remover: Remover) {
+  constructor(windowContext: WindowContext, linkValidator: LinkValidator, notifier: Notifier, remover: Remover) {
+    this.windowContext = windowContext;
     this.linkValidator = linkValidator;
     this.notifier = notifier;
     this.remover = remover;
   }
 
+  /**
+   * Blocks `.click()` invocations and click events that trigger an anchor tag redirect.
+   */
   block() {
     this.blockClickFunction();
-    this.attachClickListener(document);
-    this.attachClickListenerOnShadowRootCreation();
-    this.attachClickListenerToExistingShadowRoots();
+    this.attachClickListener(this.windowContext.document);
+    this.attachClickListenerToShadowRoots();
   }
 
   private blockClickFunction() {
@@ -27,9 +31,9 @@ export class AnchorTagBlocker implements Blocker {
     const remove = this.remover.remove.bind(this.remover);
     const notify = this.notifier.notify.bind(this.notifier);
 
-    const originalAnchorClick = HTMLAnchorElement.prototype.click;
+    const originalAnchorClick = this.windowContext.window.HTMLAnchorElement.prototype.click;
 
-    HTMLAnchorElement.prototype.click = function () {
+    this.windowContext.window.HTMLAnchorElement.prototype.click = function () {
       const href = this.getAttribute('href');
 
       if (isLinkValid(href)) {
@@ -53,30 +57,20 @@ export class AnchorTagBlocker implements Blocker {
     }, true);
   }
 
-  private attachClickListenerOnShadowRootCreation() {
-    const originalAttachShadow = Element.prototype.attachShadow;
+  private attachClickListenerToShadowRoots() {
     const attachClickListener = this.attachClickListener.bind(this);
-
-    Element.prototype.attachShadow = function (init: ShadowRootInit): ShadowRoot {
-      const shadowRoot = originalAttachShadow.call(this, init);
-      attachClickListener(shadowRoot);
-      return shadowRoot;
-    }
-  }
-
-  private attachClickListenerToExistingShadowRoots() {
-    const shadowRoots = new ShadowRootFinder().findAllShadowRoots();
-
-    for (const shadowRoot of shadowRoots) {
-      this.attachClickListener(shadowRoot);
-    }
+    this.windowContext.injectFunctionIntoShadowRoots(attachClickListener);
   }
 
   private findAnchorTag(node: EventTarget | null): HTMLAnchorElement | null {
-    if (node instanceof Element) {
+    if (this.targetIsElement(node)) {
       return node.closest("a");
     }
 
     return null;
+  }
+
+  private targetIsElement(node: EventTarget | null): node is Element {
+    return !!node && (node as Node).nodeType === Node.ELEMENT_NODE;
   }
 }

@@ -14,6 +14,21 @@
       align-items: start;
       gap: 20px;
     }
+
+
+    h1 {
+      font-size: 1rem;
+      margin: 0;
+
+      &:nth-of-type(n+2) {
+        margin-top: 40px;
+      }
+    }
+
+    iframe {
+      width: 80%;
+      height: 600px;
+    }
   </style>
   <script>
     function callFormSubmit() {
@@ -23,6 +38,7 @@
       form.submit();
       form.remove();
     }
+
     function injectShadowRootWithAnchorTag(mode = "closed", target = "_blank") {
       const host = document.createElement('div');
       document.body.appendChild(host);
@@ -73,37 +89,30 @@
     function injectRedirectThroughInnerHTML() {
       const html = `<meta http-equiv="refresh" content="1;url=https://www.duckduckgo.com">`;
       document.head.innerHTML += html;
-      document.head.insertAdjacentHTML(html);
+      document.head.insertAdjacentHTML('beforebegin', html);
     }
 
     function injectIFrameWithRedirect() {
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
+      function injectIFrame() {
+        const iframe = document.createElement('iframe');
+        iframe.srcdoc = document.head.outerHTML + document.body.outerHTML;
+        document.body.appendChild(iframe);
+      };
 
-      iframe.onload = () => {
-        const doc = iframe.contentDocument || iframe.contentWindow?.document;
-        if (doc) {
-          doc.open();
-          doc.write(`<html><body></body></html>`);
-          doc.close();
-
-          const script = doc.createElement('script');
-          script.textContent = `
-            const a = document.createElement('a');
-            a.target = '_blank';
-            a.href = 'https://www.duckduckgo.com';
-            a.click();
-          `;
-          doc.body.appendChild(script);
+      if (window.self === window.top || window.self === window.top.top) { // is not already in an iframe
+        injectIFrame();
+      } else {
+        const button = document.createElement("button");
+        button.innerText = "Create another iframe";
+        button.onclick = () => { button.remove(); injectIFrame(); };
+        document.body.append(button);
       }
-    };
-  }
-</script>
+    }
+  </script>
 </head>
 
 <body>
-  <b>Navigation to another site:</b>
+  <h1>Navigation to another site:</h1>
   <a href="https://www.duckduckgo.com">Regular anchor tag with href</a>
   <div>
     <span>
@@ -123,19 +132,29 @@
   <button onclick="simulateAnchorTagClick()">Call anchor tag .click()</button>
   <script>injectShadowRootWithAnchorTag("open", "_blank")</script>
   <div id="anchorTagInClosedShadowRootAddedLater"><span>Updating soon...</span></div>
-  <button onclick="injectRedirectThroughInnerHTML()">Inject redirect script with innerHTML</button>
-  <button onclick="injectIFrameWithRedirect()">Inject iframe with redirect</button>
+  <script>
+    const button = document.createElement("button");
+    button.innerText = "Inject redirect script";
+    button.onclick = () => {
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.innerHTML = `window.open("https://www.duckduckgo.com", "_blank")`;
+      document.body.append(script);
+    }
+    document.body.append(button);
+  </script>
+  <!--<button onclick="injectRedirectThroughInnerHTML()">Inject redirect with innerHTML</button>-->
 
-  <b style="margin-top: 40px">Navigation to another site that require failsafe:</b>
+  <h1>Navigation to another site that require failsafe:</h1>
   <button onclick="setLocationHref()">Set location href</button>
   <script>injectShadowRootWithAnchorTag("closed", "_self")</script>
 
   <!--
-  <b style="margin-top: 40px">Unblockable navigation to another site:</b>
+  <h1>Unblockable navigation to another site:</h1>
   <script>injectShadowRootWithAnchorTag("closed", "_blank")</script>
   -->
 
-  <b style="margin-top: 40px">Same site navigation:</b>
+  <h1>Same site navigation:</h1>
   <a href="/index.html">Anchor tag with relative path to /index.html</a>
   <script>
     const a = document.createElement("a");
@@ -143,6 +162,9 @@
     a.innerText = `Injected anchor tag to ${location.origin}/index.html`;
     document.body.append(a);
   </script>
+
+  <h1>Whole site as &lt;iframe&gt;</h1>
+  <script>injectIFrameWithRedirect()</script>
 </body>
 
 </html>

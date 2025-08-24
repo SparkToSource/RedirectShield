@@ -1,24 +1,21 @@
 import type { SettingsData } from "../repositories/SettingsRepository";
-import { BlockerFactory } from "./blockers/BlockerFactory";
-import { BadgeNotifier } from "./notifiers/BadgeNotifier";
-import { ConsoleNotifier } from "./notifiers/ConsoleNotifier";
-import { MultiNotifier } from "./notifiers/MultiNotifier";
-import { RemoverFactory } from "./removers/RemoverFactory";
-import { LinkValidatorFactory } from "./validators/LinkValidatorFactory";
+import { RedirectShield } from "./RedirectShield";
+import { WindowContext } from "./context/WindowContext";
 
 class Content {
   start() {
+    console.log("[RedirectShield] - Starting.");
     const settings = this.getSettings();
 
-    const notifier = new MultiNotifier([new BadgeNotifier(), new ConsoleNotifier()]);
-    const remover = new RemoverFactory().build(settings.remover);
-    const linkValidator = new LinkValidatorFactory().build(settings.linkValidatorType);
+    const topWindowContext = new WindowContext(window, document);
+    topWindowContext.runAndPropagateToChildWindowContexts((windowContext) => {
+      this.startInWindowContext(windowContext, settings);
+    });
+  }
 
-    const shields = new BlockerFactory(linkValidator, notifier, remover).buildAll(settings);
-
-    for (const shield of shields) {
-      shield.block();
-    }
+  private startInWindowContext(windowContext: WindowContext, settings: SettingsData) {
+    const redirectShield = new RedirectShield(windowContext, settings);
+    redirectShield.start();
   }
 
   private getSettings(): SettingsData {

@@ -7,6 +7,11 @@ export class AggresiveRemover implements Remover {
     this.rememberLastClickedItem();
   }
 
+  /**
+   * Removes the node that was passed to this function if it exists.
+   * Otherwise, it will delete the last clicked element.
+   * @param node The node to be removed.
+   */
   remove(node?: ChildNode) {
     const deleteTarget = node ?? this.lastClickedNode;
 
@@ -18,9 +23,13 @@ export class AggresiveRemover implements Remover {
 
   private rememberLastClickedItem() {
     document.addEventListener("click", (e) => {
-      if (e.target instanceof Element) {
+      if (this.targetIsElement(e.target)) {
         this.lastClickedNode = e.target;
       }
     }, true);
+  }
+
+  private targetIsElement(node: EventTarget | null): node is Element {
+    return !!node && (node as Node).nodeType === Node.ELEMENT_NODE;
   }
 }

@@ -1,3 +1,4 @@
+import type { WindowContext } from "../context/WindowContext";
 import type { Notifier } from "../notifiers/Notifier";
 import type { Remover } from "../removers/Remover";
 import type { LinkValidator } from "../validators/LinkValidator";
@@ -7,6 +8,7 @@ import { FormSubmitBlocker } from "./FormSubmitBlocker";
 import { HTMLInjectionBlocker } from "./HTMLInjectionBlocker";
 import { IFrameBlocker } from "./IFrameBlocker";
 import { MetaRefreshBlocker } from "./MetaRefreshBlocker";
+import { ScriptBlocker } from "./ScriptBlocker";
 import { WindowLocationChangeBlocker } from "./WindowLocationChangeBlocker";
 import { WindowOpenBlocker } from "./WindowOpenBlocker";
 
@@ -15,17 +17,20 @@ export interface BlockerFactorySettings {
   blockFormSubmit: boolean;
   blockMetaRefresh: boolean;
   blockIFrames: boolean;
+  blockScripts: boolean;
   blockWindowOpen: boolean;
   blockHTMLInjection: boolean;
   useFailSafe: boolean;
 }
 
 export class BlockerFactory {
+  private readonly windowContext: WindowContext;
   private readonly notifier: Notifier;
   private readonly remover: Remover;
-  private readonly linkValidator: LinkValidator
+  private readonly linkValidator: LinkValidator;
 
-  constructor(linkValidator: LinkValidator, notifier: Notifier, remover: Remover) {
+  constructor(windowContext: WindowContext, linkValidator: LinkValidator, notifier: Notifier, remover: Remover) {
+    this.windowContext = windowContext;
     this.linkValidator = linkValidator;
     this.notifier = notifier;
     this.remover = remover;
@@ -35,32 +40,35 @@ export class BlockerFactory {
     const shields: Blocker[] = [];
 
     if (settings.blockMetaRefresh) {
-      shields.push(new MetaRefreshBlocker(this.notifier, this.remover));
+      shields.push(new MetaRefreshBlocker(this.windowContext, this.notifier, this.remover));
     }
 
     if (settings.blockIFrames) {
-      shields.push(new IFrameBlocker(this.notifier, this.remover));
+      shields.push(new IFrameBlocker(this.windowContext, this.notifier, this.remover));
+    }
+
+    if (settings.blockScripts) {
+      shields.push(new ScriptBlocker(this.windowContext, this.notifier, this.remover));
     }
 
     if (settings.blockHTMLInjection) {
-      shields.push(new HTMLInjectionBlocker(this.notifier, this.remover));
+      shields.push(new HTMLInjectionBlocker(this.windowContext, this.notifier, this.remover));
     }
 
     if (settings.blockAnchorTags) {
-      shields.push(new AnchorTagBlocker(this.linkValidator, this.notifier, this.remover));
+      shields.push(new AnchorTagBlocker(this.windowContext, this.linkValidator, this.notifier, this.remover));
     }
 
     if (settings.blockFormSubmit) {
-      shields.push(new FormSubmitBlocker(this.linkValidator, this.notifier, this.remover));
+      shields.push(new FormSubmitBlocker(this.windowContext, this.linkValidator, this.notifier, this.remover));
     }
 
-
     if (settings.blockWindowOpen) {
-      shields.push(new WindowOpenBlocker(this.linkValidator, this.notifier, this.remover));
+      shields.push(new WindowOpenBlocker(this.windowContext, this.linkValidator, this.notifier, this.remover));
     }
 
     if (settings.useFailSafe) {
-      shields.push(new WindowLocationChangeBlocker(this.notifier, this.remover));
+      shields.push(new WindowLocationChangeBlocker(this.windowContext, this.notifier, this.remover));
     }
 
     return shields;

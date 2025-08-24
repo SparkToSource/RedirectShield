@@ -1,32 +1,43 @@
+import type { WindowContext } from "../context/WindowContext";
 import type { Notifier } from "../notifiers/Notifier";
 import type { Remover } from "../removers/Remover";
 import type { Blocker } from "./Blocker";
 
 export class HTMLInjectionBlocker implements Blocker {
+  private readonly windowContext: WindowContext;
   private readonly remover: Remover;
   private readonly notifier: Notifier;
 
-  constructor(notifier: Notifier, remover: Remover) {
+  constructor(windowContext: WindowContext, notifier: Notifier, remover: Remover) {
+    this.windowContext = windowContext;
     this.remover = remover;
     this.notifier = notifier;
   }
 
+  /**
+   * Blocks creation of elements through setting `Element.innerHTML` or calling `Element.insertAdjacentHTML`.
+   * 
+   * However, because sites often use `innerHTML` for core functionality, this may break sites.
+   */
   block() {
     this.blockInnerHTML();
     this.blockInsertAdjacentHTML();
   }
 
   private blockInnerHTML() {
-    const original = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+    const original = this.windowContext.window.Object.getOwnPropertyDescriptor(Element.prototype, "innerHTML");
 
-    if (!original || typeof original.set !== 'function' || typeof original.get !== 'function') {
+    if (!original || typeof original.get !== "function") {
       return;
     }
 
-    Object.defineProperty(Element.prototype, 'innerHTML', {
+    const notify = this.notifier.notify.bind(this.notifier);
+    const remove = this.remover.remove.bind(this.remover);
+
+    this.windowContext.window.Object.defineProperty(this.windowContext.window.Element.prototype, "innerHTML", {
       set(value) {
-        alert(`[innerHTML] Set with value: ${value}`);
-        return original.set!.call(this, value);
+        notify(`Blocked setting of innerHTML to ${value}`);
+        remove();
       },
       get() {
         return original.get!.call(this);
@@ -36,11 +47,12 @@ export class HTMLInjectionBlocker implements Blocker {
   }
 
   private blockInsertAdjacentHTML() {
-    const originalInsertAdjacentHTML = Element.prototype.insertAdjacentHTML;
+    const notify = this.notifier.notify.bind(this.notifier);
+    const remove = this.remover.remove.bind(this.remover);
 
-    Element.prototype.insertAdjacentHTML = function (position, html) {
-      alert(`[insertAdjacentHTML] Called on position: ${position} with html: ${html}`);
-      return originalInsertAdjacentHTML.call(this, position, html);
+    this.windowContext.window.Element.prototype.insertAdjacentHTML = function (_, html) {
+      notify(`Blocked setting of blockInsertAdjacentHTML to ${html}`);
+      remove();
     };
   }
 }

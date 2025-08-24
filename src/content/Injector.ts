@@ -32,11 +32,24 @@ class Injector {
       return true;
     }
 
-    if (settings.blockMode === "blacklist" && settings.blackList[window.location.hostname]) {
+    const isHostnameInBlackList = this.isHostnameBlackListed(settings.blackList);
+    if (settings.blockMode === "blacklist" && isHostnameInBlackList) {
       return true;
     }
 
     return false;
+  }
+
+  private isHostnameBlackListed(blackList: SettingsData["blackList"]) {
+    if (blackList[location.hostname]) {
+      return true;
+    }
+
+    if (location.hostname.startsWith("www.")) {
+      return blackList[location.hostname.slice(4)];
+    }
+
+    return blackList[`www.${location.hostname}`];
   }
 
   private listenForEvents() {

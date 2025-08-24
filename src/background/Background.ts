@@ -14,7 +14,9 @@ export class Background {
       return;
     }
 
-    browser.action.setBadgeText({ text: badgeCount.toString(), tabId });
+    const text = badgeCount > 99 ? "99+" : badgeCount.toString();
+
+    browser.action.setBadgeText({ text, tabId });
     browser.action.setBadgeBackgroundColor({ color: "#3f4146" });
   }
 }

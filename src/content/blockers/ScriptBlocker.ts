@@ -5,7 +5,7 @@ import { CreateElementBlocker } from "../utils/CreateElementBlocker";
 import { ElementCreationObserver } from "../utils/ElementCreationObserver";
 import type { Blocker } from "./Blocker";
 
-export class IFrameBlocker implements Blocker {
+export class ScriptBlocker implements Blocker {
   private readonly windowContext: WindowContext;
   private readonly remover: Remover;
   private readonly notifier: Notifier;
@@ -15,24 +15,22 @@ export class IFrameBlocker implements Blocker {
     this.remover = remover;
     this.notifier = notifier;
   }
-
+  
   /**
-   * Blocks creation of `<iframe>` elements.
-   * 
-   * Iframes can use `window.top.location` to redirect the user.
+   * Blocks creation of `<script>` elements.
    */
   block() {
-    this.blockIFrameCreationThroughCreateElement();
-    this.blockIFrameCreationThroughOtherMeans();
+    this.blockScriptCreationThroughCreateElement();
+    this.blockScriptAfterCreationThroughOtherMeans();
   }
 
-  private blockIFrameCreationThroughCreateElement() {
+  private blockScriptCreationThroughCreateElement() {
     const createElementBlocker = new CreateElementBlocker(this.windowContext, this.notifier, this.remover);
-    createElementBlocker.replaceCreateElement("iframe");
+    createElementBlocker.replaceCreateElement("script");
   }
 
-  private blockIFrameCreationThroughOtherMeans() {
+  private blockScriptAfterCreationThroughOtherMeans() {
     const elementCreationObserver = new ElementCreationObserver(this.windowContext, this.notifier, this.remover);
-    elementCreationObserver.removeCreatedElementsWithTag("iframe");
+    elementCreationObserver.removeCreatedElementsWithTag("script");
   }
 }
