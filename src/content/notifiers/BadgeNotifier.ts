@@ -6,7 +6,7 @@ export class BadgeNotifier implements Notifier {
   notify(_?: string | URL): void {
     this.counter++;
 
-    const event = new CustomEvent("updateBadge", {
+    const event = new CustomEvent("setBadgeCount", {
       detail: { count: this.counter }
     });
 

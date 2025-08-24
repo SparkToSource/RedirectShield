@@ -15,6 +15,7 @@ class Injector {
     if (shouldInject) {
       this.injectScript(settings);
       this.listenForEvents();
+      this.notifyUserOfActivation();
     }
   }
 
@@ -53,9 +54,13 @@ class Injector {
   }
 
   private listenForEvents() {
-    window.addEventListener("updateBadge", (e: CustomEventInit<any>) => {
-      browser.runtime.sendMessage({ action: "updateBadge", badgeCount: e.detail.count });
+    window.addEventListener("setBadgeCount", (e: CustomEventInit<any>) => {
+      browser.runtime.sendMessage({ action: "setBadgeCount", badgeCount: e.detail.count });
     });
+  }
+
+  private notifyUserOfActivation() {
+    browser.runtime.sendMessage({ action: "setBadgeState", isActive: true });
   }
 }
 

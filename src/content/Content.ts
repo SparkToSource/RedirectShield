@@ -4,7 +4,6 @@ import { WindowContext } from "./context/WindowContext";
 
 class Content {
   start() {
-    console.log("[RedirectShield] - Starting.");
     const settings = this.getSettings();
 
     const topWindowContext = new WindowContext(window, document);
