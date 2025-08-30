@@ -7,8 +7,10 @@ html {
 }
 
 body {
-  margin: 15px;
-  width: 225px;
+  margin: 12px;
+  width: 230px;
   color: var(--text-color);
   background: var(--background-color);
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
 }

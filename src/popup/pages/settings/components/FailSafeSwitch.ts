@@ -4,7 +4,7 @@ import { SettingsSwitch } from "./SettingsSwitch";
 export class FailSafeSwitch extends SettingsSwitch {
   constructor(settingsRepository: SettingsRepository) {
     super(
-      "Use \"Unsaved Changes\" failsafe:",
+      "Use 'unsaved changes' failsafe:",
       "useFailSafe",
       settingsRepository,
     );

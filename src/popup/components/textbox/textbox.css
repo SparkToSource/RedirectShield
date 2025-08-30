@@ -8,11 +8,12 @@
   background: var(--background-color);
   color: var(--text-color);
   font-family: inherit;
+  font-size: inherit;
   padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: 5px;
   resize: vertical;
-  height: 100px;
+  height: 80px;
 }
 
 .textbox textarea:focus {
