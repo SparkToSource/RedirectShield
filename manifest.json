@@ -38,5 +38,10 @@
   ],
   "permissions": [
     "storage"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "redirectshield@sparktosource.dev"
+    }
+  }
 }

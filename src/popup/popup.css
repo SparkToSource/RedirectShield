@@ -7,7 +7,8 @@ html {
 }
 
 body {
-  margin: 12px;
+  padding: 12px;
+  margin: 0 auto;
   width: 230px;
   color: var(--text-color);
   background: var(--background-color);
