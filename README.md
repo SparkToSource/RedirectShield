@@ -22,14 +22,14 @@ Redirect Shield is a browser extension designed to protect users from malicious 
 
 #### 🌐 Block Mode
 - **All**: Activate the extension on all websites.  
-- **List**: Activate only on sites specified in the "Blocked Sites" list.  
+- **Blocked sites**: Activate only on sites specified in the "Blocked sites" list.  
 - **None**: Disable the extension entirely.
 
 #### 🗑️ Removal Policy
 
 - **None**: Never remove any elements, regardless of redirect behavior.  
 - **Safe**: Remove only elements that are definitively identified as the source of a redirect.  
-- **Aggressive**: Automatically remove the last clicked element whenever a redirect is blocked, regardless of whether it was the actual trigger.
+- **Last clicked**: Automatically remove the last clicked element whenever a redirect is blocked, regardless of whether it was the actual trigger.
 
 #### 🔄 Same-Site Navigation
 Enable or disable redirects within the same website. A redirect is considered "same-site" if the destination hostname matches the current hostname.

@@ -1,7 +1,7 @@
 import type { SettingsData, SettingsRepository } from "../../../../repositories/SettingsRepository";
 import { Dropdown } from "../../../components/dropdowns/Dropdown";
 
-type BlockModeDropdownData = "All" | "List" | "None";
+type BlockModeDropdownData = "All" | "Blocked sites" | "None";
 
 export class BlockModeDropdown {
   private readonly dropdown: Dropdown<BlockModeDropdownData>;
@@ -17,7 +17,7 @@ export class BlockModeDropdown {
   }
 
   private build() {
-    const blockModeDropdown = new Dropdown<BlockModeDropdownData>("blockmode", "Block mode:", ["All", "List", "None"]);
+    const blockModeDropdown = new Dropdown<BlockModeDropdownData>("blockmode", "Block mode:", ["All", "Blocked sites", "None"]);
 
     blockModeDropdown.changeEvent.addListener((option) => {
       const blockMode = this.transformDropdownOptionToStorageFormat(option);
@@ -37,7 +37,7 @@ export class BlockModeDropdown {
       case "All":
         return "all";
 
-      case "List":
+      case "Blocked sites":
         return "blacklist";
 
       default:
@@ -51,7 +51,7 @@ export class BlockModeDropdown {
         return "All";
 
       case "blacklist":
-        return "List";
+        return "Blocked sites";
 
       default:
         return "None";

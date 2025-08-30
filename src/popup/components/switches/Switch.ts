@@ -6,13 +6,16 @@ export class Switch {
   protected readonly label: HTMLLabelElement;
   protected readonly checkbox: HTMLInputElement;
 
-  constructor(id: string, text: string) {
+  constructor(text: string, id?: string) {
     const label = document.createElement("label");
     label.classList.add("switch");
 
     const input = document.createElement("input");
     input.type = "checkbox";
-    input.id = id;
+    if (id) {
+      input.id = id;
+    }
+
     input.addEventListener("change", async () => {
       this.changeEvent.notify(this.checked);
     });

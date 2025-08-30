@@ -1,0 +1,15 @@
+#settingspage {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+#settingspage {
+  background: #eee;
+}
+
+#settingspage > :last-child {
+  margin: 5px 0;
+}

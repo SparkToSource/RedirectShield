@@ -15,7 +15,7 @@ export class InternalNavigationSwitch {
   }
 
   private build() {
-    const internalNavigationSwitch = new Switch("allowInternalNavigation", "Allow same site navigation:");
+    const internalNavigationSwitch = new Switch("Allow same site navigation:", "allowInternalNavigation");
 
     internalNavigationSwitch.changeEvent.addListener((checked) => {
       const linkValidatorType = checked ? "hostname" : "none";

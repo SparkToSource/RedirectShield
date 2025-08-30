@@ -1,7 +1,7 @@
 import type { SettingsData, SettingsRepository } from "../../../../repositories/SettingsRepository";
 import { Dropdown } from "../../../components/dropdowns/Dropdown";
 
-type RemoverDropdownData = "None" | "Safe" | "Aggressive";
+type RemoverDropdownData = "None" | "Safe" | "Last clicked";
 
 export class RemoverDropdown {
   private readonly dropdown: Dropdown<RemoverDropdownData>;
@@ -17,7 +17,7 @@ export class RemoverDropdown {
   }
 
   private build() {
-    const removerDropdown = new Dropdown<RemoverDropdownData>("remover", "Remove:", ["None", "Safe", "Aggressive"]);
+    const removerDropdown = new Dropdown<RemoverDropdownData>("remover", "Remove:", ["None", "Safe", "Last clicked"]);
 
     removerDropdown.changeEvent.addListener((option) => {
       const remover = this.transformDropdownOptionToStorageFormat(option);
@@ -34,7 +34,7 @@ export class RemoverDropdown {
 
   private transformDropdownOptionToStorageFormat(option: RemoverDropdownData): SettingsData["remover"] {
     switch (option) {
-      case "Aggressive":
+      case "Last clicked":
         return "aggressive";
 
       case "Safe":
@@ -48,7 +48,7 @@ export class RemoverDropdown {
   private transformStorageFormatToDropdownOption(option: SettingsData["remover"]): RemoverDropdownData {
     switch (option) {
       case "aggressive":
-        return "Aggressive";
+        return "Last clicked";
 
       case "safe":
         return "Safe";
